@@ -24,11 +24,13 @@ public class BDO_Login {
 		
 		try {
 			res = dao.bdologin(username, password);
+			System.out.println(res );
 			return true;
 			
 		} catch (IdentityException e) {
 			
 			res = e.getMessage();
+			System.out.println(res);
 			return false;
 		}		
 	}

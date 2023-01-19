@@ -17,6 +17,10 @@ public class Project {
 		Pduration = pduration;
 	}
 
+	public Project() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getPid() {
 		return Pid;
 	}

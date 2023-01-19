@@ -17,6 +17,10 @@ public class GramPanchayat {
 		GPPassword = gPPassword;
 	}
 
+	public GramPanchayat() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getGPid() {
 		return GPid;
 	}

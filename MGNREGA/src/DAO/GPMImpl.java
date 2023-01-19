@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import Exception.EmployeeException;
@@ -99,20 +101,112 @@ public class GPMImpl implements GPMInterface {
 	}
 
 //=====================================Create Employee Section End ======================================================================//
+
+
+	
+
+//=====================================View Employee List Section start ======================================================================//
+
 	
 	@Override
 	public List<Employee> displayAllEmployee() throws EmployeeException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		List<Employee> empList = new ArrayList<>();
+		
+		try (Connection con = DBUtil.provideConnection()){
+			
+			PreparedStatement ps = con.prepareStatement("select * from employee");
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				int eid = rs.getInt("eid");
+				int egpid = rs.getInt("egpid");
+				int epid = rs.getInt("epid");
+				String name = rs.getString("ename");
+				String address = rs.getString("eaddress");
+				Date date = rs.getDate("edate_joined");
+				int wage = rs.getInt("ewage");
+				
+				
+				Employee e = new Employee();
+				empList.add(e);
+			}
+		} catch (SQLException e) {
+			throw new EmployeeException(e.getMessage());
+		}
+		
+		if(empList.size() ==0) {
+			throw new EmployeeException("Exception : No Employeet Found.");
+		}
+		
+		return empList;
 	}
 
+//=====================================View Employee List Section End ======================================================================//
+
+	
+
+	
+//=====================================Assign Employee To Project Section Start ======================================================================//	
+	
 	@Override
 	public String assignEmployeeToProject(int pid, int eid)
 			throws EmployeeException, ProjectException, GramPanchayatException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		String result = "Employee not assinged to project";
+		
+		try (Connection conn = DBUtil.provideConnection()) {
+			
+			PreparedStatement ps = conn.prepareStatement("select * from employee where eid = ? and egpid =?");
+			ps.setInt(1, eid);
+			ps.setInt(2, storedGpmID);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				PreparedStatement ps2 = conn.prepareStatement("select * from project where pid = ? and pgpid =?");
+				ps2.setInt(1, pid);
+				ps2.setInt(2, storedGpmID);
+				
+				ResultSet rs2 = ps2.executeQuery();
+				
+				if(rs2.next()){
+					
+					PreparedStatement ps3 = conn.prepareStatement("update employee set epid = ? where eid =?");
+					ps3.setInt(1, pid);
+					ps3.setInt(2, eid);
+					
+					int x = ps3.executeUpdate();
+					
+					if(x>0) {
+						
+						result = "Project with PID ID : " + pid + " assigned to employee with EID ID : " + eid;
+						return result;
+					}
+					
+				}else {
+					
+					throw new ProjectException("Either Project don't exist or NOT assinged to Logined Gram Panchayat Member Account by BDO");
+				}
+				
+			}else {
+				
+				throw new EmployeeException("Either employee don't exist or assigned by different Gram Panchayat Member ");
+			}
+		
+		} catch (SQLException e) {
+			throw new GramPanchayatException(e.getMessage());
+		}
+	
+		return result;
 	}
 
+//=====================================Assign Employee To Project Section End======================================================================//	
+
+	
 	@Override
 	public List<EmployeeWage> employeedaysAndWage() throws EmployeeException {
 		// TODO Auto-generated method stub

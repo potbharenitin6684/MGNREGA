@@ -25,11 +25,13 @@ public class GPMLogin {
 		
 		try {
 			res= dao.gmpLogin(phone, password);
+			System.out.println(res );
 			return true;
 			
 		} catch (IdentityException e) {
 			
 			res = e.getMessage();
+			System.out.println(res);
 			return false;
 			
 		} catch (GramPanchayatException e) {
