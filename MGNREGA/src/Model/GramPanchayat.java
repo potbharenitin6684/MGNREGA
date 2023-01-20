@@ -8,6 +8,10 @@ public class GramPanchayat {
 	private String GPPhone;
 	private String GPPassword;
 	
+	public GramPanchayat() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public GramPanchayat(int gPid, String gPName, String gPAddress, String gPPhone, String gPPassword) {
 		super();
 		GPid = gPid;
@@ -17,9 +21,6 @@ public class GramPanchayat {
 		GPPassword = gPPassword;
 	}
 
-	public GramPanchayat() {
-		// TODO Auto-generated constructor stub
-	}
 
 	public int getGPid() {
 		return GPid;
