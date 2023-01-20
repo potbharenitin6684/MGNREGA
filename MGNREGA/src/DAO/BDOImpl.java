@@ -1,6 +1,7 @@
 package DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,6 +41,10 @@ public class BDOImpl implements BDOInterface {
 
 
 	
+	
+	
+	
+	
 //=====================================Create Project Section start===================================================================//
 	@Override
 	public String createProject(Project p) throws ProjectException {
@@ -73,6 +78,10 @@ public class BDOImpl implements BDOInterface {
 	
 
 
+	
+	
+	
+	
 	
 //=====================================View Project Section Start===================================================================//
 		
@@ -112,6 +121,12 @@ public class BDOImpl implements BDOInterface {
 //=====================================View Project Section End===================================================================//	
 
 	
+	
+	
+	
+	
+	
+	
 
 //===================================== Create Gram Panchayat Member Section start===================================================================//	
 	
@@ -119,11 +134,11 @@ public class BDOImpl implements BDOInterface {
 	public String createGramPanchayatMember(GramPanchayat g) throws GramPanchayatException {
 		// TODO Auto-generated method stub
 		
-		String result ="Gram Panchayat Member Data Not Inserted.";
+		String result ="Gram Panchayat Member information not Inserted !";
 		
 		try (Connection con = DBUtil.provideConnection()){
 			
-			PreparedStatement ps = con.prepareStatement("insert into grampanchayat (gname,gaddress,gphone,gpassword) values(?,?,?,?)");
+			PreparedStatement ps = con.prepareStatement("insert into grampanchayat (gpname,gpaddress,gpphone,gppassword) values(?,?,?,?)");
 			
 			ps.setString(1, g.getGPName());
 			ps.setString(2, g.getGPAddress());
@@ -133,7 +148,7 @@ public class BDOImpl implements BDOInterface {
 			int x = ps.executeUpdate();
 			
 			if(x>0) {
-				result = "Gram Panchayat data Inserted.";
+				result = "Gram Panchayat Member information is Inserted successfully !!!.";
 			}else {
 				throw new GramPanchayatException(result);
 			}
@@ -150,30 +165,175 @@ public class BDOImpl implements BDOInterface {
 
 
 	
+	
+	
+	
 //===================================== View List Of Gram Panchayat Member Section Start===================================================================//	
 	
 	@Override
 	public List<GramPanchayat> displayAllGramPayanchayatMember() throws GramPanchayatException {	
 		// TODO Auto-generated method stub
-		return null;
+			
+		List<GramPanchayat> GPMList = new ArrayList<>();
 		
+		try (Connection conn = DBUtil.provideConnection()){
+			
+			PreparedStatement ps = conn.prepareStatement("select * from grampanchayat");
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				int gpid = rs.getInt("GPID");
+				String name = rs.getString("GPName");
+				String address = rs.getString("GPAddress");
+				String phone = rs.getString("GPPhone");
+				String password = rs.getString("GPPassword");
+					
+				GramPanchayat gp = new GramPanchayat(gpid, name, address, phone, password);
+				GPMList.add(gp);
+			}
+		} catch (SQLException e) {
+			throw new GramPanchayatException(e.getMessage());
+		}
+		
+		if(GPMList.size() ==0) {
+			throw new GramPanchayatException("Exception : No Gram Panchayat Member Found.");
+		}
+		
+		return GPMList;
 	}
 
 //===================================== View List Of Gram Panchayat Member Section End===================================================================//	
 	
+
 	
+	
+	
+	
+	
+	
+//===================================== Allocate Project To GPM Section Start ===================================================================//		
 	
 	@Override
 	public String allocateProjectToGPM(int gpmid, int pid)
 			throws ProjectException, GramPanchayatException, BDOException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		String res = "Project is Not Allocated ";
+		
+		try (Connection con = DBUtil.provideConnection()) {
+			
+			PreparedStatement ps = con.prepareStatement("select * from grampanchayat where GPID = ?");
+			ps.setInt(1, gpmid);
+			
+			ResultSet rs= ps.executeQuery();
+			
+			if(rs.next()) {
+				
+				PreparedStatement ps2 = con.prepareStatement("select * from project where pid = ?");
+				ps2.setInt(1,pid);
+				
+				ResultSet rs2 = ps2.executeQuery();
+				
+				if(rs2.next()) {
+					
+					PreparedStatement ps3 = con.prepareStatement("update project set pgpid = ? where pid = ?");
+					ps3.setInt(1, gpmid);
+					ps3.setInt(2, pid);
+					
+					int x = ps3.executeUpdate();
+					
+					if(x > 0) {
+						res = " Project with PID ID : " + pid +" Allocated to GPM with GPM ID : " +gpmid ;
+						return res;
+					}
+	
+				}else {
+					throw new ProjectException("Project is not exist with PID : " + pid);	
+				}
+				
+			}else {
+				throw new GramPanchayatException("Gram Panchyat Member is not exist with GPID :" + gpmid);
+			}
+		} catch (SQLException e) {
+			throw new BDOException(e.getMessage());
+		}
+		return res;
 	}
+//===================================== Allocate Project To GPM Section End ===================================================================//
 
+	
+
+	
+	
+	
+	
+	
+//=====================================Employee On A Project Section start ===================================================================//
+	
 	@Override
 	public List<Employee> employeeOnAProject(int pid) throws ProjectException, EmployeeException, BDOException {
 		// TODO Auto-generated method stub
-		return null;
-	}
+		
+		List<Employee> empList = new ArrayList<>();
+		
+		try (Connection con = DBUtil.provideConnection()){
+			
+			PreparedStatement ps = con.prepareStatement("select * from project where pid =?");
+			ps.setInt(1, pid);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			if(rs.next()) {
+				PreparedStatement ps2 = con.prepareStatement("select * from employee e inner join project p on e.epid = p.pid where p.pid = ?");
+				ps2.setInt(1, pid);
+				
+				ResultSet rs2 = ps2.executeQuery();
+				
+				while(rs2.next()) {
 
+					int eid = rs2.getInt("eId");
+					int egpid = rs2.getInt("eGPid");
+					int epid = rs2.getInt("ePid");
+					String name = rs2.getString("eName");
+					String address = rs2.getString("eAddress");
+					Date date = rs2.getDate("eDate_joined");
+					int wage = rs2.getInt("eWage");
+				
+					Employee e = new Employee(eid, egpid, epid, name, address, date, wage);
+					empList.add(e);
+				}
+				
+			}else {
+				throw new ProjectException("No Project found with PID ID : " + pid);
+			}
+		
+		} catch (SQLException e) {
+			throw new BDOException(e.getMessage());
+		}
+		
+		if(empList.size() ==0) {
+			throw new EmployeeException("Exception : No Employee Found in the given PID : ." + pid);
+		}
+		return empList;
+	}
 }
+
+//===================================== Employee On A Project Section End ===================================================================//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

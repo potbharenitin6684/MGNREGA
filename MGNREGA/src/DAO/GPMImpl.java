@@ -1,11 +1,11 @@
 package DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import Exception.EmployeeException;
@@ -38,9 +38,9 @@ public class GPMImpl implements GPMInterface {
 			
 			while(rs.next()) {
 				
-				String phoneNumber = rs.getString("gphone");
+				String phoneNumber = rs.getString("GPPhone");
 				
-				String pass = rs.getString("gpassword");
+				String pass = rs.getString("GPPassword");
 				
 				if(phoneNumber.equals(phone) && pass.equals(password)) {
 				
@@ -129,8 +129,7 @@ public class GPMImpl implements GPMInterface {
 				Date date = rs.getDate("edate_joined");
 				int wage = rs.getInt("ewage");
 				
-				
-				Employee e = new Employee();
+				Employee e = new Employee(eid, egpid, epid, name, address, date, wage);
 				empList.add(e);
 			}
 		} catch (SQLException e) {
@@ -156,7 +155,7 @@ public class GPMImpl implements GPMInterface {
 			throws EmployeeException, ProjectException, GramPanchayatException {
 		// TODO Auto-generated method stub
 		
-		String result = "Employee not assinged to project";
+		String res = "Employee not assinged to project";
 		
 		try (Connection conn = DBUtil.provideConnection()) {
 			
@@ -183,8 +182,8 @@ public class GPMImpl implements GPMInterface {
 					
 					if(x>0) {
 						
-						result = "Project with PID ID : " + pid + " assigned to employee with EID ID : " + eid;
-						return result;
+						res = "Project with PID ID : " + pid + " assigned to employee with EID ID : " + eid;
+						return res;
 					}
 					
 				}else {
@@ -201,16 +200,72 @@ public class GPMImpl implements GPMInterface {
 			throw new GramPanchayatException(e.getMessage());
 		}
 	
-		return result;
+		return res;
 	}
 
 //=====================================Assign Employee To Project Section End======================================================================//	
+
+
+	
+	
+	
+//=====================================Employee Days And Wage Section End======================================================================//	
 
 	
 	@Override
 	public List<EmployeeWage> employeedaysAndWage() throws EmployeeException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		List<EmployeeWage> WageList = new ArrayList<>();
+		
+		try (Connection con = DBUtil.provideConnection()) {
+			
+			PreparedStatement ps = con.prepareStatement(" select e.eid,e.ename,p.pid,p.pname,e.edate_joined,datediff(curdate(),edate_joined) days,e.ewage,datediff(curdate(),edate_joined)*e.ewage total from employee e inner join project p on e.epid = p.pid group by e.eid");
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				
+				int eid = rs.getInt("eid");
+				String ename = rs.getString("ename");
+				int pid = rs.getInt("pid");
+				String pname = rs.getString("pname");
+				Date date = rs.getDate("edate_joined");
+				int days = rs.getInt("days");
+				int wage = rs.getInt("ewage");
+				int total = rs.getInt("total");
+				
+				EmployeeWage empWageTotal = new EmployeeWage(eid, ename, pid, pname, date, days, wage, total);
+				WageList.add(empWageTotal);	
+			}
+	
+		} catch (SQLException e) {
+		
+			throw new EmployeeException(e.getMessage());
+		}
+		
+		if(WageList.size() ==0) {
+			throw new EmployeeException("Exception : No employee Found in DataBase");
+		}
+			
+		return WageList;
 	}
-
 }
+
+//=====================================Employee Days And Wage Section End======================================================================//	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
