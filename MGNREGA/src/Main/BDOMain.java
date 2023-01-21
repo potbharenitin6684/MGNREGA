@@ -10,33 +10,6 @@ import UseCase.EmployeeOnAProject;
 
 public class BDOMain {
 	
-//public static void main(String[] args) {
-//		BdoLoginUseCase login = new BdoLoginUseCase();
-//		login.bdoLogin();
-	//}
-			
-//			BdoLoginUseCase login = new BdoLoginUseCase();
-//			login.bdoLogin();
-			
-//			CreateProjectUseCase createProject = new CreateProjectUseCase();
-//			createProject.createProject();
-			
-//			DisplayAllProjectUseCase projects = new DisplayAllProjectUseCase();
-//			projects.displayProject();
-			
-//			CreateGramPanchayatMemberUseCase createGPM = new CreateGramPanchayatMemberUseCase();
-//			createGPM.createGramPanchayatMember();
-			
-//			DisplayAllGramPayanchayatMemberUseCase gpmList = new DisplayAllGramPayanchayatMemberUseCase();
-//			gpmList.displayAllGPM();
-			
-//			AllocateProjectToGPMUseCase allocate = new AllocateProjectToGPMUseCase();
-//			allocate.allocateProjectToGPM();
-			
-//			EmployeeOnAProjectUseCase emp = new EmployeeOnAProjectUseCase();
-//			emp.employeeOnAProject();
-			
-
 			public static Boolean bdoLogin() {
 				BDO_Login login = new BDO_Login();
 				Boolean result = login.bdoLogin();

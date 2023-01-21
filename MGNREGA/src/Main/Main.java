@@ -43,7 +43,7 @@ public class Main {
 					resultb = bmain.bdoLogin();
 					
 					if(countBdoLogin ==3 && resultb ==false) {
-						System.out.println("Maximum Limit Crossed : Try Again Later");
+						System.out.println("Maximum Limit : Try Again Later");
 						break;
 					}
 				}

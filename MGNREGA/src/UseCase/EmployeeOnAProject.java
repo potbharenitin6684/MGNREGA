@@ -37,7 +37,7 @@ public class EmployeeOnAProject {
 			
 			for(Employee e : emp) {
 				
-				System.out.format("%9.2s %13s %10s",e.geteId(),e.geteName(),e.geteWage());
+				System.out.format("    %9.2s   %13s      %10s",e.geteId(),e.geteName(),e.geteWage());
 				System.out.println();
 			}
 			
