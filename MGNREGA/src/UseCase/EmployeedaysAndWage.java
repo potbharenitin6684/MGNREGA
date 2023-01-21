@@ -21,7 +21,7 @@ public class EmployeedaysAndWage {
 				
 				System.out.println("===================================================================");
 				
-				System.out.printf("%7s %10s %11s %17s %22s %17s %13s %21s","EID", "ENAME", "PID", "PNAME", "DATE_JOINED", "TOTAL DAYS", "WAGE/DAY", "TOTAL_AMOUNT");
+				System.out.printf("%7s  %10s %11s   %17s%22s%17s %13s   %21s","EID", "ENAME", "PID", "PNAME", "DATE_JOINED", "TOTAL DAYS", "WAGE/DAY", "TOTAL_AMOUNT");
 				System.out.println();
 				
 				System.out.println("===================================================================");
@@ -29,7 +29,7 @@ public class EmployeedaysAndWage {
 				
 				for(EmployeeWage e : empWage) {
 					
-					System.out.format("%2s %12s %9s %22s %17s %14s %14s %18s",e.getEid(),e.getName(), e.getProjectID(),e.getProjectName(),e.getDate_joined(),e.getNo_Of_Days(),e.getWage(),e.getTotal_Amount());
+					System.out.format("   %2s   %12s  %9s%22s%17s  %14s%14s    %18s",e.getEid(),e.getName(), e.getProjectID(),e.getProjectName(),e.getDate_joined(),e.getNo_Of_Days(),e.getWage(),e.getTotal_Amount());
 					System.out.println();
 				}
 			
