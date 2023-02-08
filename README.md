@@ -12,10 +12,10 @@ Domain Description:
 System works in the following way:
 A project is created by BDO. Project is where people are assigned to. Before assigning anybody to a project(done by Gram Panchayat member) his/her data must be inserted into the system.
 
-<h1>Flow-Chart</h1>
-
-![FLOW-CHART](https://user-images.githubusercontent.com/105916453/217176651-7f033ef5-110c-4e85-a3fd-bd4f471a0a89.jpeg)
-
 <h1>E-R Diagram</h1>
 
 ![E-R Diagram](https://user-images.githubusercontent.com/105916453/213925163-2f7a8759-684b-42fe-aa86-b690e84f330a.png)
+
+<h1>Flow-Chart</h1>
+
+![FLOW-CHART](https://user-images.githubusercontent.com/105916453/217176651-7f033ef5-110c-4e85-a3fd-bd4f471a0a89.jpeg)
